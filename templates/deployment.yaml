@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "superset.fullname" . }}
+  labels:
+    app: {{ include "superset.name" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "superset.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "superset.name" . }}
+    spec:
+      serviceAccountName: {{ .Values.serviceAccountName }}
+      containers:
+        - name: superset
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          ports:
+            - containerPort: 8088
+          env:
+            - name: SUPERSET_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: superset-secrets
+                  key: superset_secret_key
+            - name: DATABASE_URL
+              value: "postgres://{{ .Values.postgres.externalDatabase.user }}:{{ .Values.postgres.externalDatabase.password }}@{{ .Values.postgres.externalDatabase.host }}:{{ .Values.postgres.externalDatabase.port }}/{{ .Values.postgres.externalDatabase.database }}"
+            - name: REDIS_URL
+              value: "redis://:{{ .Values.redis.externalRedis.password }}@{{ .Values.redis.externalRedis.host }}:{{ .Values.redis.externalRedis.port }}"

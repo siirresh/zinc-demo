@@ -1,0 +1,6 @@
+apiVersion: v2
+name: superset
+description: A Helm chart for deploying Apache Superset on Kubernetes
+version: 1.0.0
+appVersion: "2.0"
+dependencies: []

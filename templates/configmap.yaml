@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: superset-config
+data:
+  SUPERSET_CONFIG: |
+    DATABASE_URI = 'postgresql://{{ .Values.postgres.externalDatabase.user }}:{{ .Values.postgres.externalDatabase.password }}@{{ .Values.postgres.externalDatabase.host }}:{{ .Values.postgres.externalDatabase.port }}/{{ .Values.postgres.externalDatabase.database }}'
