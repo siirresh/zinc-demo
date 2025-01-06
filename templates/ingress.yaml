@@ -3,11 +3,14 @@ kind: Ingress
 metadata:
   name: {{ include "superset.fullname" . }}
   annotations:
-    alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:region:account-id:certificate/certificate-id  # Optional SSL
+    alb.ingress.kubernetes.io/scheme: internal
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/success-codes: 200,302
+#    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:region:account-id:certificate/certificate-id  # Optional SSL
 spec:
+  ingressClassName: alb
   rules:
-    - host: superset.example.com
+    - host: superset.zinc-app.com
       http:
         paths:
           - path: /

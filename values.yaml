@@ -8,21 +8,21 @@ image:
 
 # Postgres (AWS RDS) Configuration
 postgres:
-  enabled: false   # Disable local PostgreSQL, using external database (AWS RDS)
+  enabled: false   
   externalDatabase:
     host: zinc-superset-dev.cosmcmqeobox.us-east-1.rds.amazonaws.com # RDS PostgreSQL endpoint
     port: 5432
     database: superset_db
-    user: {{ .Values.secrets.postgres_user }}
-    password: {{ .Values.secrets.postgres_password }}
+    user: "{{ .Values.secrets.postgres_user }}"
+    password: "{{ .Values.secrets.postgres_password }}"
 
 # Redis (AWS ElastiCache) Configuration
 redis:
-  enabled: false   # Disable local Redis, using external Redis (AWS ElastiCache)
+  enabled: false   
   externalRedis:
     host: clustercfg.zinc-superset-dev-v1.ikhhqi.use1.cache.amazonaws.com:6379  # ElastiCache Redis endpoint
     port: 6379
-    password: {{ .Values.secrets.redis_password }}
+    password: "{{ .Values.secrets.redis_password }}"
 
 # Service Account Configuration for IAM Role Integration
 serviceAccountName: superset-serviceaccount
@@ -33,7 +33,7 @@ serviceAccountAnnotations:
 ingress:
   enabled: true
   annotations:
-    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/scheme: "Internal"
 #    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:region:account-id:certificate/certificate-id  # Optional
   hosts:
     - superset.zinc-app.com  # Replace with your domain name
@@ -41,14 +41,14 @@ ingress:
 # Horizontal Pod Autoscaler (HPA) Configuration
 hpa:
   enabled: true
-  minReplicas: 2
+  minReplicas: 1
   maxReplicas: 3
   targetCPUUtilizationPercentage: 80
 
 # Superuser Credentials (Can be configured from AWS Secrets Manager or provided here)
 superuser:
-  username: "{{ .Values.secrets.superset_superuser_username }}"
-  password: "{{ .Values.secrets.superset_superuser_password }}"
+  username: admin
+  password: admin
 
 # Secrets Configuration for Sensitive Data
 secrets:
@@ -56,5 +56,5 @@ secrets:
   postgres_password: "arn:aws:secretsmanager:us-east-1:621454496946:secret:zinc-superset-rds-secrets-19u8iK:postgres-password"
   redis_password: "arn:aws:secretsmanager:us-east-1:621454496946:secret:zinc-superset-dev-redis-secrets-1x1x3r"
   superset_secret_key: "arn:aws:secretsmanager:us-east-1:621454496946:secret:superset-secret-key-E4g2kY"
-  superset_superuser_username: "arn:aws:secretsmanager:us-east-1:621454496946:secret:zinc-superset-superuser-credentials-dev-y3QdGl:username"
-  superset_superuser_password: "arn:aws:secretsmanager:us-east-1:621454496946:secret:zinc-superset-superuser-credentials-dev-y3QdGl:password"
+#  superset_superuser_username: "arn:aws:secretsmanager:us-east-1:621454496946:secret:zinc-superset-superuser-credentials-dev-y3QdGl:username"
+#  superset_superuser_password: "arn:aws:secretsmanager:us-east-1:621454496946:secret:zinc-superset-superuser-credentials-dev-y3QdGl:password"
